@@ -1,0 +1,1 @@
+Duncan! We have to go. Hey... Come on. Dad, hurry! Go. Come on! Dad, hurry! I'm-I'm trying! I'm trying! Go, go, go, go, go, go, go! I'm trying! Reuben! Reuben! Come on, please! Go! Go, push it! Kincaid! Duncan! Dad. Hey! Hey! Turn the boat around! There he is. I see him. There! Yeah, there! Go! Hey! Who do we give it to? You decide. We'll give it to everyone. Look.
