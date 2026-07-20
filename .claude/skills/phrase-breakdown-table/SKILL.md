@@ -17,14 +17,11 @@ Bảng luôn có đúng 3 cột:
 ## Quy tắc chia cụm từ
 1. Không được bỏ sót từ nào trong đoạn văn gốc.
 2. Chia theo cụm có nghĩa trọn vẹn (mệnh đề, cụm động từ, câu cảm thán ngắn...), không chia vụn đến từng từ đơn lẻ trừ khi từ đó đứng độc lập về nghĩa.
-3. **Cụm từ không nên quá dài.** Mỗi dòng nên chỉ dài khoảng 3-4 từ, cùng lắm là 5 từ. Nếu một câu gốc dài hơn mức đó (nhiều mệnh đề nối bằng "and", "but", dấu phẩy liệt kê, hoặc đơn giản là một câu dài hơn 5 từ), phải tách thành nhiều dòng nhỏ hơn theo từng cụm ngắn, thay vì gộp cả câu dài vào một ô.
-4. **Cụm từ cũng không nên quá ngắn (dưới 3 từ) một cách không cần thiết.** Một dòng chỉ 1-2 từ CHỈ hợp lệ khi đó thực sự là một lượt lời/câu cảm thán độc lập đứng riêng một mình trong văn bản gốc (xem mục 5). Nếu một cụm 1-2 từ chỉ là phần còn sót lại của việc chia vụn một mệnh đề/câu dài hơn (ví dụ chia "get up, get up" thành hai dòng "get up" + "get up", hoặc chia "one more thing" thành "one" + "more thing"), phải GỘP lại với cụm liền kề (trước hoặc sau, tùy theo cụm nào cùng thuộc một mệnh đề/lượt lời) sao cho cụm gộp vẫn nằm trong giới hạn tối đa 5 từ ở mục 3. Ưu tiên gộp hơn là để sót một dòng quá ngắn không có lý do ngữ nghĩa độc lập.
-5. Các câu cảm thán ngắn, tiếng đệm (Yeah, Okay, Oh, Um...) vẫn được tách thành dòng riêng nếu chúng mang một lượt lời riêng (đây là ngoại lệ hợp lệ cho mục 4, không phải lỗi cần gộp).
+3. **Cụm từ không nên quá dài.** Mỗi dòng nên ưu tiên khoảng 3-4 từ, tối đa cho phép là **8 từ**. Nếu một câu gốc dài hơn 8 từ (nhiều mệnh đề nối bằng "and", "but", dấu phẩy liệt kê...), phải tách thành nhiều dòng nhỏ hơn theo từng cụm ngắn, thay vì gộp cả câu dài vào một ô. Đây là ngưỡng cứng — công cụ `scripts/check_phrase_length.sh` sẽ tự động rà và báo mọi dòng ≥9 từ.
+4. **Cụm từ không nên quá ngắn một cách không cần thiết**, nhưng đây chỉ là khuyến nghị khi tạo bảng lần đầu, KHÔNG phải ngưỡng cứng được công cụ kiểm tra tự động (công cụ hiện chỉ rà dòng quá dài, không rà dòng quá ngắn — vì phần lớn dòng ngắn 1-2 từ trong thực tế là lượt lời/câu cảm thán độc lập hợp lệ, rất khó phân biệt tự động với mảnh vỡ câu bị chia vụn). Khi mới chia cụm, vẫn nên tránh tách một mệnh đề liền mạch thành các mảnh 1-2 từ không cần thiết (ví dụ không chia "get up, get up" thành hai dòng "get up" + "get up") — nhưng nếu phát hiện sau này, không bắt buộc phải quay lại sửa hàng loạt trừ khi được yêu cầu riêng.
+5. Các câu cảm thán ngắn, tiếng đệm (Yeah, Okay, Oh, Um...) luôn được tách thành dòng riêng nếu chúng mang một lượt lời riêng.
 6. Câu bị ngắt giữa chừng (do bị cắt lời, xúc động...) vẫn giữ nguyên như trong bản gốc và ghi chú "câu bị ngắt" nếu cần.
-7. **Tự kiểm tra lại sau khi chia bảng xong (bắt buộc):** rà lại toàn bộ các dòng đã tạo —
-   - Dòng nào có **6 từ trở lên** ở cột 1 → tách nhỏ thêm cho đúng mục 3.
-   - Dòng nào có **1-2 từ** mà KHÔNG phải một lượt lời/câu cảm thán độc lập (mục 5) → gộp với dòng liền kề cho đúng mục 4.
-   - Sau khi gộp/tách, verify lại bằng cách ghép toàn bộ cột 1 theo thứ tự và so khớp token-by-token với văn bản gốc, đảm bảo không thiếu/thừa/đổi thứ tự từ nào.
+7. **Tự kiểm tra lại sau khi chia bảng xong (bắt buộc):** rà lại toàn bộ các dòng đã tạo — dòng nào có **9 từ trở lên** ở cột 1 → tách nhỏ thêm cho đúng mục 3 (có thể chạy `scripts/check_phrase_length.sh <file>` từ gốc project để rà tự động). Sau khi tách, verify lại bằng cách ghép toàn bộ cột 1 theo thứ tự và so khớp token-by-token với văn bản gốc, đảm bảo không thiếu/thừa/đổi thứ tự từ nào.
 
 ## Quy tắc chia bảng theo đoạn văn (QUAN TRỌNG — dễ làm sai)
 - **Ranh giới đoạn = ranh giới xuống dòng (line break/newline) trong văn bản người dùng gửi.** Mỗi lần xuống dòng trong input là một ranh giới đoạn, tạo thành một bảng riêng.

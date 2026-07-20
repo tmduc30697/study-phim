@@ -1,6 +1,7 @@
 #!/bin/bash
-# Cách dùng: ./random_paragraph_table.sh "<tên list>"
-#   vd:      ./random_paragraph_table.sh "Batch 1"
+# Cách dùng (chạy từ thư mục gốc project study-phim/):
+#   ./scripts/random_paragraph_table.sh "<tên list>"
+#   vd: ./scripts/random_paragraph_table.sh "Batch 1"
 #
 # Tạo 1 Google Task List mới với tên truyền vào, chọn ngẫu nhiên 1 folder (trừ
 # .claude và các folder ẩn khác), chọn ngẫu nhiên 1 file paragraph-*.md trong
@@ -32,8 +33,10 @@ if [[ -z "$TASKLIST_TITLE" ]]; then
     exit 1
 fi
 
-# Luôn thao tác từ thư mục chứa script này, bất kể được gọi từ đâu.
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Luôn thao tác từ thư mục gốc project (thư mục cha của scripts/ chứa file
+# này), bất kể được gọi từ đâu — vì .env và các folder paragraph-*.md đều nằm
+# ở gốc project, không nằm trong scripts/.
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$BASE_DIR" || exit 1
 
 if [[ -f "$BASE_DIR/.env" ]]; then
@@ -171,6 +174,13 @@ trap 'rm -f "$list_resp_file" "$resp_file"' EXIT
 # biến môi trường TASK_CREATE_DELAY_SEC (đơn vị giây, hỗ trợ số thập phân).
 DELAY_SEC="${TASK_CREATE_DELAY_SEC:-0.3}"
 
+# Google Tasks API mặc định chèn task mới lên ĐẦU danh sách (không phải cuối)
+# nếu không truyền query param "previous". Để giữ đúng thứ tự của bảng (task
+# đầu tiên trong bảng nằm trên cùng, các task sau nối tiếp xuống dưới), mỗi
+# lần tạo task mới phải chỉ định "previous" là id của task vừa tạo ngay trước
+# đó — nhờ vậy task mới luôn được chèn nối tiếp sau, không nhảy lên đầu.
+prev_task_id=""
+
 for row in "${table_array[@]}"; do
     # Bỏ qua dòng header và dòng phân cách của markdown table
     [[ "$row" == "| Cụm từ tiếng Anh"* ]] && continue
@@ -188,7 +198,13 @@ for row in "${table_array[@]}"; do
 
     payload="$(jq -n --arg title "$eng" --arg notes "$notes" '{title: $title, notes: $notes}')"
 
-    http_code="$(curl -s -o "$resp_file" -w '%{http_code}' -X POST "$API_URL" \
+    if [[ -n "$prev_task_id" ]]; then
+        insert_url="${API_URL}?previous=${prev_task_id}"
+    else
+        insert_url="$API_URL"
+    fi
+
+    http_code="$(curl -s -o "$resp_file" -w '%{http_code}' -X POST "$insert_url" \
         -H "Authorization: Bearer ${GOOGLE_ACCESS_TOKEN}" \
         -H "Content-Type: application/json" \
         -d "$payload")"
@@ -196,6 +212,7 @@ for row in "${table_array[@]}"; do
     if [[ "$http_code" == "200" || "$http_code" == "201" ]]; then
         created=$((created + 1))
         echo "[OK] $eng"
+        prev_task_id="$(jq -r '.id' "$resp_file")"
     else
         failed=$((failed + 1))
         echo "[FAIL $http_code] $eng"

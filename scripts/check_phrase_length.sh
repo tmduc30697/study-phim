@@ -1,6 +1,7 @@
 #!/bin/bash
-# Cách dùng: ./check_phrase_length.sh <đường-dẫn-file>
-#   vd:      ./check_phrase_length.sh 1-tron-ares-2025/paragraph-2.md
+# Cách dùng (chạy từ thư mục gốc project study-phim/):
+#   ./scripts/check_phrase_length.sh <đường-dẫn-file>
+#   vd: ./scripts/check_phrase_length.sh 1-tron-ares-2025/paragraph-2.md
 #
 # Rà một file paragraph-*.md, tìm bảng cụm từ (cột "Cụm từ tiếng Anh" | "Phiên
 # âm IPA" | "Nghĩa tiếng Việt"), rồi liệt kê các dòng có cụm từ tiếng Anh (cột
